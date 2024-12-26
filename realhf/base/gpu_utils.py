@@ -7,6 +7,8 @@ import time
 from collections import defaultdict
 from typing import *
 
+import torch
+
 import realhf.base.logging as logging
 import realhf.base.name_resolve as name_resolve
 import realhf.base.names as names
@@ -152,6 +154,8 @@ def isolate_cuda_device(
     #     f"Worker type {worker_type} rank {rank} running on host {socket.gethostname()}, "
     #     f"local peer index: {local_peer_index}, local gpu id {local_gpu_id}."
     # )
+
+    torch.cuda.init()  # Workaround
 
     os.environ["CUDA_VISIBLE_DEVICES"] = str(local_gpu_id)
     os.environ["GPU_DEVICES_ISOLATED"] = "1"
