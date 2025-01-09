@@ -180,3 +180,5 @@ api_key.json
 *.pdf
 
 .vscode/
+
+/local_scripts/
