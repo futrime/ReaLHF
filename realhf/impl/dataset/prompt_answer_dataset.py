@@ -7,11 +7,12 @@ import torch.utils.data
 
 from realhf.api.core import data_api
 from realhf.base import logging
+from realhf.impl.dataset.base_dataset import BaseDataset
 
 logger = logging.getLogger("Prompt Answer Dataset")
 
 
-class PromptAnswerDataset(torch.utils.data.Dataset):
+class PromptAnswerDataset(BaseDataset):
 
     def __init__(
         self,

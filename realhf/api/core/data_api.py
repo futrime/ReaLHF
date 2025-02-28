@@ -33,12 +33,13 @@ from pydantic import dataclasses as pdclasses
 from pydantic import field_validator, model_validator
 
 from realhf.api.core import config as config_api
+from realhf.api.core.base_processor import BaseProcessor
 from realhf.base import datapack, logging
 from realhf.base.cluster import spec as cluster_spec
 
 logger = logging.getLogger("api.data")
 
-TokenizerLike = Union[transformers.PreTrainedTokenizerFast, transformers.ProcessorMixin]
+TokenizerLike = Union[transformers.PreTrainedTokenizerFast, BaseProcessor]
 
 
 def load_hf_tokenizer(
@@ -641,9 +642,9 @@ def get_shuffle_indices(seed: int, size: int):
 
 def load_shuffle_split_dataset(
     util: DatasetUtility,
-    dataset_path: str,
-    dataset_builder: Optional[Callable[[], List[Dict[str, str]]]] = None,
-):
+    dataset_path: Optional[str],
+    dataset_builder: Optional[Callable[[], List[Any]]] = None,
+) -> List[Any]:
     if dataset_path is not None:
         if dataset_path.endswith(".jsonl"):
             with open(dataset_path, "r") as f:
@@ -671,7 +672,7 @@ def load_shuffle_split_dataset(
     subset_indices = shuffle_indices[
         util.dp_rank * datasize_per_rank : (util.dp_rank + 1) * datasize_per_rank
     ]
-    data: List[Dict[str, str]] = [data[i] for i in subset_indices]
+    data: List[Any] = [data[i] for i in subset_indices]
 
     return data
 

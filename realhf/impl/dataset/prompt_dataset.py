@@ -5,11 +5,12 @@ import torch.utils.data
 
 from realhf.api.core import data_api
 from realhf.base import logging
+from realhf.impl.dataset.base_dataset import BaseDataset
 
 logger = logging.getLogger("Prompt Dataset")
 
 
-class PromptDataset(torch.utils.data.Dataset):
+class PromptDataset(BaseDataset):
 
     def __init__(
         self,

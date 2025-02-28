@@ -7,9 +7,10 @@ import torch
 import torch.utils.data
 
 from realhf.api.core import data_api
+from realhf.impl.dataset.base_dataset import BaseDataset
 
 
-class RewardModelingPairedDataset(torch.utils.data.Dataset):
+class RewardModelingPairedDataset(BaseDataset):
 
     def __init__(
         self,
