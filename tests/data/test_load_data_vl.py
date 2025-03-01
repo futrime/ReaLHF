@@ -24,7 +24,6 @@ def processor() -> BaseProcessor:
 
 @pytest.fixture(scope="session")
 def raw_prompt_answer_vl_dataset(
-    request: pytest.FixtureRequest,
     processor: BaseProcessor,
     tmp_path_factory: pytest.TempPathFactory,
 ) -> List[PromptAnswerVLDatasetEntry]:

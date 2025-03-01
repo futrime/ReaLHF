@@ -827,6 +827,10 @@ def forward_helper(
     packed_input_ids: Optional[torch.Tensor] = None,
     cu_seqlens: Optional[torch.Tensor] = None,
     max_seqlen: Optional[int] = None,
+    *,
+    pixel_values: Optional[torch.Tensor] = None,
+    image_grid_thw: Optional[torch.LongTensor] = None,
+    video_grid_thw: Optional[torch.LongTensor] = None,
 ) -> DuckModelOutput:
     assert (packed_input_ids is None) == (cu_seqlens is None) == (max_seqlen is None)
     build_packed = False
