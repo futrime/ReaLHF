@@ -82,27 +82,35 @@ class PromptAnswerVLDataset(BaseDataset):
             for image_path in entry["images"]
         ]
 
-        sequence_feature = processor(text=sequence, images=images)
+        sequence_feature = processor(text=sequence, images=images, return_tensors="pt")
 
-        prompt_feature = processor(text=entry["prompt"], images=images)
+        prompt_feature = processor(
+            text=entry["prompt"], images=images, return_tensors="pt"
+        )
 
         return SequenceSample.from_default(
-            seqlens=[len(sequence_feature["input_ids"])],
+            seqlens=[sequence_feature["input_ids"].shape[1]],
             ids=[entry["id"]],
             data={
-                "packed_input_ids": torch.tensor(sequence_feature["input_ids"]),
+                "packed_input_ids": cast(torch.Tensor, sequence_feature["input_ids"])
+                .squeeze()
+                .to(dtype=torch.int64),
                 "prompt_mask": torch.cat(
                     [
-                        torch.ones(prompt_feature["input_ids"].shape[0]),
+                        torch.ones(
+                            prompt_feature["input_ids"].shape[1],
+                            dtype=torch.bool,
+                        ),
                         torch.zeros(
-                            sequence_feature["input_ids"].shape[0]
-                            - prompt_feature["input_ids"].shape[0]
+                            sequence_feature["input_ids"].shape[1]
+                            - prompt_feature["input_ids"].shape[1],
+                            dtype=torch.bool,
                         ),
                     ]
                 ),
             },
             metadata={
-                "entry": entry,
+                "entry": [entry],
             },
         )
 

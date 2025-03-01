@@ -623,9 +623,15 @@ class DatasetUtility:
     tokenizer: TokenizerLike
 
     def __post_init__(self):
-        if self.tokenizer.pad_token_id is None:
-            self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
-            if self.tokenizer.eos_token_id is None:
+        tokenizer = (
+            self.tokenizer
+            if isinstance(self.tokenizer, transformers.PreTrainedTokenizerFast)
+            else self.tokenizer.tokenizer
+        )
+
+        if tokenizer.pad_token_id is None:
+            tokenizer.pad_token_id = tokenizer.eos_token_id
+            if tokenizer.eos_token_id is None:
                 raise ValueError("eos_token_id of tokenizer must be defined.")
 
 

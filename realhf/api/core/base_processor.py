@@ -10,6 +10,9 @@ from transformers import BatchFeature, PreTrainedTokenizerBase, ProcessorMixin
 class BaseProcessor(ABC, ProcessorMixin):
     """Base processor class."""
 
+    image_token: str
+    video_token: str
+
     tokenizer: PreTrainedTokenizerBase
 
     @abstractmethod
@@ -19,6 +22,7 @@ class BaseProcessor(ABC, ProcessorMixin):
         text: Union[str, List[str]],
         images: Optional[List[Image]] = None,
         videos: Optional[List[List[Image]]] = None,
+        return_tensors: Optional[str] = None,
     ) -> BatchFeature:
         """Processes the input data.
 
@@ -26,6 +30,11 @@ class BaseProcessor(ABC, ProcessorMixin):
             text: The text.
             images: The images.
             videos: The videos.
+            return_tensors: If set, will return tensors of a particular framework. Acceptable values are:
+                - `'tf'`: Return TensorFlow `tf.constant` objects.
+                - `'pt'`: Return PyTorch `torch.Tensor` objects.
+                - `'np'`: Return NumPy `np.ndarray` objects.
+                - `'jax'`: Return JAX `jnp.ndarray` objects.
 
         Returns:
             The processed data with the following fields:
